@@ -33,7 +33,7 @@ env.info()
 OneL = Rocket(
     mass = 1.119806,
     radius = 0.04,
-    inertia = (0.078,0.078,0.000895),
+    inertia = (0.078,0.078,0),
     coordinate_system_orientation = "nose_to_tail",
     center_of_mass_without_motor = 0.586867,
     power_off_drag ="/mnt/c/Users/zebra/Documents/Rocketry/CDLONE.txt",
@@ -44,24 +44,29 @@ nose_cone = OneL.add_nose(length=0.3302, kind="elliptical", position=0)
 
 fin_set = OneL.add_trapezoidal_fins(n=4,root_chord=0.135,tip_chord=0.089, span=0.066,position=-1,cant_angle=0.86)
 
+
+
+ #   dry_inertia=(148/10000000, 148/10000000,0.000679),
+
 #Motor 
 H97 = SolidMotor(
     thrust_source="/mnt/c/Users/zebra/Documents/Rocketry/LONETHRUSTCURVE.csv",
     dry_mass=0.141,
-    dry_inertia=(0.0000148, 0.0000148,0.000679),
+    dry_inertia=(0, 0,0),
     nozzle_radius=29 / 1000,
-    grain_number=5,
-    grain_density=200,
+    grain_number=4,
+    grain_density=2085.96,
     grain_outer_radius=29 / 1000,
     grain_initial_inner_radius=15 / 1000,
     grain_initial_height=120 / 1000,
-    grain_separation=5 / 1000,
+    grain_separation=0 / 1000,
     grains_center_of_mass_position=0.397,
     center_of_dry_mass_position=0.317,
     nozzle_position=0,
     burn_time=3.9,
-    throat_radius=11 / 1000,
+    throat_radius=31 / 1000,
     coordinate_system_orientation="nozzle_to_combustion_chamber",
 )
 
-OneL.draw()
+#OneL.draw()
+OneL.info()
