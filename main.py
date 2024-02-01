@@ -13,10 +13,10 @@ env.set_date(
 )
 
 #atmospheric data
-env.set_atmospheric_model(type="Forecast", file="GFS")
+#env.set_atmospheric_model(type="Forecast", file="GFS")
 
 #Expected Apogee of rocket
-env.max_expected_height = 1000
+env.max_expected_height = 2289
 
 #shows enviromental information based on location and date
 env.info()
@@ -46,6 +46,13 @@ nose_cone = OneL.add_nose(length=0.3302, kind="elliptical", position=0)
 #Fin
 fin_set = OneL.add_trapezoidal_fins(n=4,root_chord=0.135,tip_chord=0.089, span=0.066,position=-1,cant_angle=0.86)
 
+#Parachute
+Main = OneL.add_parachute(
+    "Main",
+    cd_s = 2.1,
+    trigger = "apogee"
+)
+
 #Motor 
 H97 = SolidMotor(
     thrust_source="/mnt/c/Users/zebra/Documents/Rocketry/LONETHRUSTCURVE.csv",
@@ -61,10 +68,17 @@ H97 = SolidMotor(
     grains_center_of_mass_position=0.397, 
     center_of_dry_mass_position=0.317,
     nozzle_position=0,
-    burn_time=2.2,#from apogeerockets
+    burn_time=1.6,#from thrustcurve.csv
     throat_radius=7.93 / 1000, #good
     coordinate_system_orientation="nozzle_to_combustion_chamber",
 )
 
 #OneL.draw()
 OneL.info()
+
+test_flight = Flight(
+    rocket=OneL, environment=env,rail_length = 5,inclination = 90,heading =0
+)
+test_flight.all_info()
+#you have to remove the parachute at the end so you dont have multiple parachutes?
+OneL.parachutes.remove(Main)
