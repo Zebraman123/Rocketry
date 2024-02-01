@@ -3,32 +3,6 @@ import matplotlib.pyplot as plt
 plt.style.use("seaborn-v0_8-dark-palette")
 import numpy as np
 from scipy.signal import savgol_filter
-#Location, Elevation in meters
-#tripolinorthtexas - seymour
-env = Environment(
-    latitude=33.501037, longitude=-99.338722, elevation=1289
-)
-
-#Year, Month, Day, Hour
-env.set_date(
-    (2023, 11, 18, 12)
-)
-#range has to be number of years desired + 1
-startyear = [2023]
-for x in range(21): 
-    if x == 0:
-        continue
-    startyear.append(startyear[0]-x)
-#for x in startyear:print(x)
-
-#atmospheric data
-#env.set_atmospheric_model(type="Forecast", file="GFS")
-
-#Expected Apogee of rocket
-env.max_expected_height = 2289
-
-#shows enviromental information based on location and date
-#env.info()
 
 #Thrustcurve.org M1850W Aerotech for etr
 
@@ -84,13 +58,54 @@ H97 = SolidMotor(
 
 OneL.add_motor(H97, 1.003)
 
-OneL.plots.draw()
-OneL.info()
-H97.plots.draw()
+#OneL.plots.draw()
+#OneL.info()
+#H97.plots.draw()
 
-test_flight = Flight(
-    rocket=OneL, environment=env,rail_length = 5,inclination = 90,heading =0
+#Location, Elevation in meters
+#tripolinorthtexas - seymour
+env = Environment(
+    latitude=33.501037, longitude=-99.338722, elevation=1289
 )
+
+#Year, Month, Day, Hour
+#env.set_date(
+#   (2023, 11, 18, 12)
+#)
+#num of years desired for finding mean apogee
+numYears = 20
+#First year entered should be the most recent year you wanna test
+years = [2023]
+for x in range(numYears+1): 
+    if x == 0:
+        continue
+    years.append(years[0]-x)
+#for x in startyear:print(x)
+
+#looping through and createing each flightdata set
+testFlights = []
+for x in range(numYears+1):
+    env.set_date((years[x],11,18,12))
+    testFlights.append(Flight(rocket=OneL,environment=env,rail_length=5,inclination=90,heading=0))
+sumApogee =0
+for x in range(numYears+1):
+    sumApogee += testFlights[x].apogee
+print(sumApogee/numYears)
+#atmospheric data
+#env.set_atmospheric_model(type="Forecast", file="GFS")
+
+#Expected Apogee of rocket
+env.max_expected_height = 2289
+
+#shows enviromental information based on location and date
+#env.info()
+
+
+
+
+#test_flight = Flight(
+#    rocket=OneL, environment=env,rail_length = 5,inclination = 90,heading =0
+#)
 #test_flight.all_info()
 #you have to remove the parachute at the end so you dont have multiple parachutes?
 OneL.parachutes.remove(Main)
